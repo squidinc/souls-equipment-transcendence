@@ -211,12 +211,22 @@
 
         /* Separator */
         .control-separator {
-            height: 2rem; /* h-8 */
-            width: 1px; /* w-[1px] */
-            background-color: #a0aec0; /* bg-gray-500 */
-            margin-left: 0.25rem; /* mx-1 */
-            margin-right: 0.25rem; /* mx-1 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
+            margin: 0 0.5rem; /* Adjust horizontal margin */
+            color: #fbd38d; /* Yellow color for the arrow */
+        }
+        .control-separator .icon {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        /* Override previous vertical bar styles */
+        .control-separator.control-separator {
+            height: auto;
+            width: auto;
+            background-color: transparent;
         }
 
         /* Segmented Control Styling */
@@ -238,6 +248,17 @@
             background-color: #2d3748; /* bg-gray-800 */
             border: 1px solid #4a5568; /* border border-gray-600 */
             padding: 1px; /* p-[2px] -> reduced to 1px */
+            flex-direction: row; /* Ensure horizontal by default */
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Reset compact padding and margin for horizontal buttons */
+        .segmented-control[data-field="currentGrade"] button,
+        .segmented-control[data-field="currentType"] button,
+        .segmented-control[data-field="targetGrade"] button {
+            padding: 0.1rem 0.25rem;
+            margin-bottom: 0;
         }
 
         .segmented-control button {
@@ -423,7 +444,7 @@
         ];
         const partOptions = [
             { value: 'Weapon', text: 'Wpn', icon: 'sword' },
-            { value: 'Armor', text: 'Arm', icon: 'footprints' }, /* Changed to footprints */
+            { value: 'Armor', text: 'Arm', icon: 'shield' }, /* Changed to shield */
             { value: 'Helmet', text: 'Hlm', icon: 'hard-hat' },
             { value: 'Boots', text: 'Bts', icon: 'footprints' }, /* Changed from sneaker to footprints */
         ];
@@ -462,17 +483,23 @@
             rowDiv.innerHTML = `
                 ${removeButtonHtml}
                 <div class="control-group-wrapper">
-                    <!-- Current Equipment Details -->
-                    ${currentGradeControl}
-                    ${currentTypeControl}
-                    ${currentPartControl}
-                    ${currentTierControl}
+                    <!-- Current Equipment Details: Grade + Tier stacked, Type + Part stacked -->
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                        ${currentGradeControl}
+                        ${currentTierControl}
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                        ${currentTypeControl}
+                        ${currentPartControl}
+                    </div>
                 </div>
-                <div class="control-separator"></div> <!-- Separator -->
+                <span class="control-separator" aria-hidden="true"><i data-lucide="arrow-right" class="icon"></i></span>
                 <div class="control-group-wrapper">
-                    <!-- Target Equipment Details -->
-                    ${targetGradeControl}
-                    ${targetTierControl}
+                    <!-- Target Equipment Details: Grade + Tier stacked -->
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                        ${targetGradeControl}
+                        ${targetTierControl}
+                    </div>
                 </div>
             `;
             return rowDiv;
