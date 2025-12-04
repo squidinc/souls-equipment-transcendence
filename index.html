@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Souls Equipment Transcendence Calculator</title>
+    <!-- Google Fonts for 'Red Hat Mono' -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Mono:wght@500&display=swap" rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Red Hat Mono', Arial, sans-serif; /* Fallback for overall body */
+            font-size: 16px;
+            background-color: #1a202c; /* bg-gray-900 */
+            color: #e2e8f0; /* text-gray-100 */
+            min-height: 100vh;
+            padding: 1rem; /* p-4 */
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container-main {
+            max-width: 80rem; /* max-w-7xl */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Headings */
+        .app-title {
+            font-size: 2.25rem; /* text-4xl */
+            line-height: 2.5rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #f6e05e; /* text-yellow-300 */
+            text-align: center;
+            margin-bottom: 2rem; /* mb-8 */
+            margin-top: 1rem; /* mt-4 */
+        }
+        @media (min-width: 768px) { /* md:text-5xl */
+            .app-title {
+                font-size: 3rem;
+                line-height: 1;
+            }
+        }
+
+        .section-title {
+            font-size: 1.5rem; /* text-2xl */
+            line-height: 2rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #fbd38d; /* text-yellow-200 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+
+        .section-description {
+            color: #a0aec0; /* text-gray-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+
+        /* Card-like sections */
+        .card {
+            background-color: #2d3748; /* bg-gray-800 */
+            padding: 1.5rem; /* p-6 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+            margin-bottom: 1rem; /* mb-4 */
+            border: 1px solid #4a5568; /* border border-gray-700 */
+        }
+
+        /* Resource inputs */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr)); /* grid-cols-1 */
+            gap: 1rem; /* gap-4 */
+        }
+        @media (min-width: 640px) { /* sm:grid-cols-2 */
+            .resource-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (min-width: 768px) { /* md:grid-cols-3 */
+            .resource-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
+        @media (min-width: 1024px) { /* lg:grid-cols-5 */
+            .resource-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+        }
+
+        .resource-input-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem; /* p-2 */
+            background-color: #4a5568; /* bg-gray-700 */
+            border-radius: 0.375rem; /* rounded-md */
+        }
+
+        .resource-input-group label {
+            color: #cbd5e0; /* text-gray-300 */
+        }
+
+        .resource-input-group input[type="number"] {
+            width: 5rem; /* w-20 */
+            padding: 0.25rem; /* p-1 */
+            border: 1px solid #4a5568; /* border-gray-600 */
+            border-radius: 0.375rem; /* rounded-md */
+            text-align: right;
+            background-color: #2d3748; /* bg-gray-600 */
+            color: #fbd38d; /* text-yellow-200 */
+            outline: none;
+        }
+
+        .resource-input-group input[type="number"]:focus {
+            box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.5); /* focus:ring-2 focus:ring-yellow-500 */
+        }
+
+        /* Equipment rows container */
+        .equipment-rows-container {
+            margin-bottom: 1rem;
+            /* space-y-4 - will add margin-top to children using JS */
+        }
+
+        /* Add equipment button */
+        .add-equipment-button-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5rem; /* mt-6 */
+        }
+
+        .add-equipment-button {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem; /* px-4 py-2 */
+            background-color: #48bb78; /* bg-green-700 */
+            color: #fff; /* text-white */
+            border-radius: 0.375rem; /* rounded-md */
+            transition: background-color 0.2s ease-in-out;
+            outline: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .add-equipment-button:hover {
+            background-color: #38a169; /* hover:bg-green-600 */
+        }
+
+        .add-equipment-button:focus {
+            box-shadow: 0 0 0 2px rgba(72, 187, 120, 0.5), 0 0 0 4px rgba(45, 55, 72, 0.8); /* focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-800 */
+        }
+
+        .add-equipment-button .icon {
+            width: 1.25rem; /* w-5 */
+            height: 1.25rem; /* h-5 */
+            margin-right: 0.5rem; /* mr-2 */
+        }
+
+        /* Equipment Row */
+        .equipment-row {
+            display: flex;
+            flex-direction: row; /* flex-row */
+            align-items: center;
+            gap: 0.5rem; /* gap-2 */
+            background-color: #4a5568; /* bg-gray-700 */
+            padding: 0.5rem; /* p-2 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            overflow-x: auto; /* overflow-x-auto */
+            white-space: nowrap; /* whitespace-nowrap */
+            min-width: 100%; /* min-w-full */
+        }
+
+        .equipment-row + .equipment-row {
+            margin-top: 1rem; /* Mimics space-y-4 */
+        }
+
+
+        /* Remove button */
+        .remove-equipment-row {
+            flex-shrink: 0;
+            color: #fc8181; /* text-red-400 */
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0.25rem; /* p-1 */
+            border-radius: 9999px; /* rounded-full */
+            outline: none;
+            transition: color 0.15s ease-in-out;
+        }
+
+        .remove-equipment-row:hover {
+            color: #e53e3e; /* hover:text-red-300 - adjusted slightly for clarity against red-400 */
+        }
+
+        .remove-equipment-row:focus {
+            box-shadow: 0 0 0 2px rgba(245, 101, 101, 0.5), 0 0 0 4px rgba(45, 55, 72, 0.8); /* focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-700 */
+        }
+
+        .remove-equipment-row .icon {
+            width: 1.25rem; /* w-5 */
+            height: 1.25rem; /* h-5 */
+        }
+
+        /* Control groups within row */
+        .control-group-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 0.25rem; /* gap-1 -> reduced to 0.25rem */
+            flex-wrap: nowrap; /* flex-nowrap */
+        }
+
+        /* Separator */
+        .control-separator {
+            height: 2rem; /* h-8 */
+            width: 1px; /* w-[1px] */
+            background-color: #a0aec0; /* bg-gray-500 */
+            margin-left: 0.25rem; /* mx-1 */
+            margin-right: 0.25rem; /* mx-1 */
+            flex-shrink: 0;
+        }
+
+        /* Segmented Control Styling */
+        .segmented-control-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0; /* gap-1 -> reduced to 0 */
+            flex-shrink: 0;
+        }
+
+        .segmented-control-label {
+            display: none; /* Hide labels to maximize space */
+        }
+
+        .segmented-control {
+            display: flex;
+            border-radius: 0.375rem; /* rounded-md */
+            background-color: #2d3748; /* bg-gray-800 */
+            border: 1px solid #4a5568; /* border border-gray-600 */
+            padding: 1px; /* p-[2px] -> reduced to 1px */
+        }
+
+        .segmented-control button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.1rem 0.25rem; /* px-1.5 py-0.5 -> reduced for compactness */
+            font-size: 0.75rem; /* text-xs */
+            border-radius: 0.125rem; /* rounded-sm */
+            transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, opacity 0.15s ease-in-out;
+            white-space: nowrap;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            line-height: 1; /* Adjust line height for better button alignment */
+        }
+
+        /* Grade specific colors (already defined) */
+        .grade-L { background-color: #FECD3C; color: #333; } /* Legendary color */
+        .grade-M { background-color: #8F2717; color: #fff; } /* Mythic color */
+
+        /* Active states for segmented control buttons */
+        .segmented-control button[aria-pressed="true"] {
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5), 0 0 0 3px rgba(45, 55, 72, 0.8); /* Simulate ring-2 ring-offset-1 ring-offset-gray-700 */
+        }
+
+        /* Grade active ring colors */
+        .segmented-control button.grade-L[aria-pressed="true"] {
+            box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.7), 0 0 0 3px rgba(45, 55, 72, 0.8); /* ring-yellow-400 */
+        }
+        .segmented-control button.grade-M[aria-pressed="true"] {
+            box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.7), 0 0 0 3px rgba(45, 55, 72, 0.8); /* ring-red-400 */
+        }
+
+        /* Default active state for Type, Part, Tier */
+        .segmented-control button:not(.grade-L):not(.grade-M)[aria-pressed="true"] {
+            background-color: #2b6cb0; /* bg-blue-600 */
+            color: #fff; /* text-white */
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.7), 0 0 0 3px rgba(45, 55, 72, 0.8); /* ring-blue-500 */
+        }
+
+        /* Inactive states */
+        .segmented-control button:not([aria-pressed="true"]) {
+            background-color: #4a5568; /* bg-gray-600 */
+            color: #cbd5e0; /* text-gray-300 */
+            opacity: 0.7;
+        }
+        .segmented-control button:not([aria-pressed="true"]):hover {
+            opacity: 1;
+            background-color: #616e7f; /* hover:bg-gray-500 */
+        }
+
+        /* Tier Font Styling */
+        .segmented-control-tier button {
+            font-family: 'Red Hat Mono', monospace; /* Explicitly use Red Hat Mono for Tier */
+            font-weight: 500; /* Medium 500 */
+        }
+
+        /* Lucide icon sizes within buttons */
+        .segmented-control button .icon {
+            width: 0.75rem; /* w-3 */
+            height: 0.75rem; /* h-3 */
+        }
+
+    </style>
+</head>
+<body class="">
+    <div class="container-main">
+        <h1 class="app-title">Souls Equipment Transcendence Calculator</h1>
+
+        <div id="available-resources-input" class="card">
+            <h2 class="section-title">Available Resources Input</h2>
+            <p class="section-description">Hey there, adventurer! This is where you'll tell me what precious resources you've already hoarded. Just like finding a rare drop, knowing what you have makes planning your next transcendence much smoother!</p>
+
+            <div class="resource-grid">
+                <div class="resource-input-group">
+                    <label for="blueAbyssalStones">Blue Abyssal Stones</label>
+                    <input type="number" id="blueAbyssalStones" min="0" value="0">
+                </div>
+                <div class="resource-input-group">
+                    <label for="purpleAbyssalStones">Purple Abyssal Stones</label>
+                    <input type="number" id="purpleAbyssalStones" min="0" value="0">
+                </div>
+                <div class="resource-input-group">
+                    <label for="redAbyssalStones">Red Abyssal Stones</label>
+                    <input type="number" id="redAbyssalStones" min="0" value="0">
+                </div>
+                <div class="resource-input-group">
+                    <label for="redTranscendenceEssences">Red Transcendence Essences</label>
+                    <input type="number" id="redTranscendenceEssences" min="0" value="0">
+                </div>
+                <div class="resource-input-group">
+                    <label for="unequippedEquipmentCopies">Unequipped Equipment Copies</label>
+                    <input type="number" id="unequippedEquipmentCopies" min="0" value="0">
+                </div>
+            </div>
+        </div>
+
+        <div id="equipment-to-transcend-input" class="card">
+            <h2 class="section-title">Equipment Input Area</h2>
+            <p class="section-description">Alright, champion, what magnificent gear are we looking to elevate today? Input the equipment you want to transcend, and I'll help you chart its glorious path from Legendary to Mythic!</p>
+
+            <div id="equipment-rows-container" class="equipment-rows-container">
+                <!-- Equipment Row Template will be rendered here by JS -->
+            </div>
+
+            <div class="add-equipment-button-wrapper">
+                <button id="add-equipment-row" class="add-equipment-button">
+                    <i data-lucide="circle-plus" class="icon"></i> Add Equipment
+                </button>
+            </div>
+        </div>
+
+        <div id="calculation-output" class="card">
+            <h2 class="section-title">Transcendence Resource Output</h2>
+            <p class="section-description">This is where the magic happens! Once you've told me what you have and what you want to upgrade, I'll reveal the exact resources you need to reach that next legendary or mythic tier. No more guesswork, just pure, calculated power!</p>
+            <!-- Content for output -->
+        </div>
+    </div>
+
+    <script>
+        // Ensure Lucide icons are created after they are in the DOM
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+
+        const equipmentRowsContainer = document.getElementById('equipment-rows-container');
+        const addEquipmentRowButton = document.getElementById('add-equipment-row');
+
+        let equipmentList = []; // Stores the state of each equipment row
+
+        // Default state for a new equipment item
+        const defaultEquipmentState = {
+            currentGrade: 'L',
+            currentType: 'Strength',
+            currentPart: 'Weapon',
+            currentTier: 't0',
+            targetGrade: 'M',
+            targetTier: 't0',
+        };
+
+        // Helper to generate a segmented control HTML
+        function createSegmentedControlHtml(label, fieldName, options, currentValue) {
+            let optionsHtml = options.map(option => {
+                const isActive = currentValue === option.value;
+                let buttonClasses = ``;
+                let content = option.text;
+
+                // Apply specific styling based on option type
+                if (fieldName === 'currentGrade' || fieldName === 'targetGrade') {
+                    buttonClasses += ` ${option.colorClass}`; // Use direct color classes from definition
+                } else if (option.icon) {
+                    content = `<i data-lucide="${option.icon}" class="icon"></i>`;
+                }
+
+                // Tier control uses a specific font
+                if (fieldName === 'currentTier' || fieldName === 'targetTier') {
+                    buttonClasses += ` segmented-control-tier`;
+                }
+
+                return `<button type="button" class="${buttonClasses}" data-value="${option.value}" aria-pressed="${isActive}">${content}</button>`;
+            }).join('');
+
+            return `
+                <div class="segmented-control-container">
+                    <span class="segmented-control-label">${label}</span>
+                    <div class="segmented-control" role="radiogroup" aria-labelledby="${fieldName}-label" data-field="${fieldName}">
+                        ${optionsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Options data for segmented controls
+        const gradeOptions = [
+            { value: 'L', text: 'L', colorClass: 'grade-L' },
+            { value: 'M', text: 'M', colorClass: 'grade-M' },
+        ];
+        const typeOptions = [
+            { value: 'Strength', text: 'Str', icon: 'gavel' },
+            { value: 'Agility', text: 'Agi', icon: 'bow-arrow' },
+            { value: 'Intelligence', text: 'Int', icon: 'wand' },
+        ];
+        const partOptions = [
+            { value: 'Weapon', text: 'Wpn', icon: 'sword' },
+            { value: 'Armor', text: 'Arm', icon: 'footprints' }, /* Changed to footprints */
+            { value: 'Helmet', text: 'Hlm', icon: 'hard-hat' },
+            { value: 'Boots', text: 'Bts', icon: 'footprints' }, /* Changed from sneaker to footprints */
+        ];
+        const tierOptions = [
+            { value: 't0', text: 't0' },
+            { value: 't1', text: 't1' },
+            { value: 't2', text: 't2' },
+            { value: 't3', text: 't3' },
+        ];
+
+
+        // Function to create an HTML element for an equipment row
+        function createEquipmentRow(equipment, index) {
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'equipment-row';
+            rowDiv.dataset.index = index;
+
+            // Remove button
+            const removeButtonHtml = `
+                <button class="remove-equipment-row" aria-label="Remove equipment row">
+                    <i data-lucide="circle-minus" class="icon"></i>
+                </button>
+            `;
+
+            // Current Equipment Controls
+            const currentGradeControl = createSegmentedControlHtml('Current Grade', 'currentGrade', gradeOptions, equipment.currentGrade);
+            const currentTypeControl = createSegmentedControlHtml('Type', 'currentType', typeOptions, equipment.currentType);
+            const currentPartControl = createSegmentedControlHtml('Part', 'currentPart', partOptions, equipment.currentPart);
+            const currentTierControl = createSegmentedControlHtml('Tier', 'currentTier', tierOptions, equipment.currentTier);
+
+            // Target Equipment Controls
+            const targetGradeControl = createSegmentedControlHtml('Target Grade', 'targetGrade', gradeOptions, equipment.targetGrade);
+            const targetTierControl = createSegmentedControlHtml('Tier', 'targetTier', tierOptions, equipment.targetTier);
+
+
+            rowDiv.innerHTML = `
+                ${removeButtonHtml}
+                <div class="control-group-wrapper">
+                    <!-- Current Equipment Details -->
+                    ${currentGradeControl}
+                    ${currentTypeControl}
+                    ${currentPartControl}
+                    ${currentTierControl}
+                </div>
+                <div class="control-separator"></div> <!-- Separator -->
+                <div class="control-group-wrapper">
+                    <!-- Target Equipment Details -->
+                    ${targetGradeControl}
+                    ${targetTierControl}
+                </div>
+            `;
+            return rowDiv;
+        }
+
+        // Function to render all equipment rows
+        function renderEquipmentRows() {
+            equipmentRowsContainer.innerHTML = ''; // Clear existing rows
+
+            if (equipmentList.length === 0) {
+                // If no equipment, add the default one
+                equipmentList.push({ ...defaultEquipmentState });
+            }
+
+            equipmentList.forEach((equipment, index) => {
+                const row = createEquipmentRow(equipment, index);
+                equipmentRowsContainer.appendChild(row);
+            });
+
+            // Re-create Lucide icons after new DOM elements are added
+            lucide.createIcons();
+
+            // Attach event listeners to new remove buttons
+            document.querySelectorAll('.remove-equipment-row').forEach(button => {
+                button.onclick = (event) => {
+                    const rowDiv = event.currentTarget.closest('.equipment-row');
+                    const index = parseInt(rowDiv.dataset.index);
+
+                    if (equipmentList.length === 1) {
+                        // If only one row, clear its selections (reset to default state)
+                        equipmentList[0] = { ...defaultEquipmentState };
+                    } else {
+                        // If multiple rows, remove this row
+                        equipmentList.splice(index, 1);
+                    }
+                    renderEquipmentRows(); // Re-render to reflect changes
+                };
+            });
+
+            // Attach event listeners for segmented controls
+            document.querySelectorAll('.segmented-control button').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const clickedButton = event.currentTarget;
+                    const segmentedControl = clickedButton.closest('.segmented-control');
+                    const rowDiv = clickedButton.closest('.equipment-row');
+
+                    if (!segmentedControl || !rowDiv) return;
+
+                    const index = parseInt(rowDiv.dataset.index);
+                    const field = segmentedControl.dataset.field;
+                    const value = clickedButton.dataset.value;
+
+                    if (equipmentList[index] && field) {
+                        equipmentList[index][field] = value;
+                        renderEquipmentRows(); // Re-render to update active states
+                    }
+                });
+            });
+        }
+
+        // Add event listener for the 'Add Equipment' button
+        addEquipmentRowButton.addEventListener('click', () => {
+            equipmentList.push({ ...defaultEquipmentState });
+            renderEquipmentRows();
+        });
+
+        // Initial render when the page loads
+        renderEquipmentRows();
+    </script>
+</body>
+</html>
