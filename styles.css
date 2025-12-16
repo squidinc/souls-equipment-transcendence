@@ -1,0 +1,234 @@
+.section-label {
+font-family: 'Anton SC', sans-serif;
+}
+
+.gradient-blue-ember {
+background: linear-gradient(180deg, #60a5fa 0%, #1e3a8a 100%);
+}
+
+.gradient-purple-ember {
+background: linear-gradient(180deg, #e879f9 0%, #4c1d95 100%);
+}
+
+.gradient-red-ember {
+background: linear-gradient(180deg, #ef4444 0%, #7f1d1d 100%);
+}
+
+.gradient-essence {
+background: linear-gradient(180deg, #000000 0%, #dc2626 35%, #f97316 70%, #fbbf24 100%);
+}
+
+.bg-equipment {
+background-color: #dc2626;
+}
+
+.remaining-value {
+color: white;
+}
+
+.remaining-value.negative {
+color: #ff4444;
+font-weight: bold;
+}
+
+.grade-pill {
+position: relative;
+height: 46px;
+width: 24px;
+border-radius: 12px;
+overflow: visible;
+}
+
+.grade-segment {
+position: absolute;
+width: 100%;
+border-radius: 12px;
+transition: all 0.3s ease;
+}
+
+.grade-segment.legendary {
+height: 66.6%;
+bottom: 0;
+background-color: rgba(218, 5, 5, 0.4);
+}
+
+.grade-segment.mythic {
+height: 66.8%;
+top: 16.65%;
+background-color: rgba(255, 203, 10, 0.4);
+z-index: 2;
+}
+
+.grade-segment.refined {
+height: 66.6%;
+top: 0;
+background-color: rgba(41, 127, 127, 0.4);
+}
+
+.grade-pill.selected-legendary .grade-segment.legendary {
+background-color: #dc2626;
+z-index: 3;
+box-shadow: 0 0 8px #dc2626;
+}
+
+.grade-pill.selected-mythic .grade-segment.mythic {
+background-color: #fbbf24;
+z-index: 3;
+box-shadow: 0 0 8px #fbbf24;
+}
+
+.grade-pill.selected-refined .grade-segment.refined {
+background-color: #53FFFF;
+z-index: 3;
+box-shadow: 0 0 8px #53FFFF;
+}
+
+.grade-pill-indicator {
+position: absolute;
+left: 50%;
+transform: translateX(-50%);
+width: 16px;
+height: 16px;
+border-radius: 50%;
+transition: all 0.3s ease;
+box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+z-index: 10;
+}
+
+.grade-pill.unselected .grade-pill-indicator {
+display: none;
+}
+
+.grade-pill.selected-refined .grade-pill-indicator {
+top: 6px;
+background-color: #53FFFF;
+}
+
+.grade-pill.selected-mythic .grade-pill-indicator {
+top: 50%;
+transform: translate(-50%, -50%);
+background-color: #fbbf24;
+}
+
+.grade-pill.selected-legendary .grade-pill-indicator {
+bottom: 6px;
+background-color: #dc2626;
+}
+
+.tier-cycle-btn {
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+justify-content: flex-end;
+gap: 0;
+padding: 4px;
+min-height: 46px;
+min-width: 46px;
+cursor: pointer;
+transition: all 0.25s ease;
+
+border: none;
+background: none;
+box-shadow: none;
+filter: none;
+transform: none;
+
+background-size: contain;
+background-position: center;
+background-repeat: no-repeat;
+position: relative;
+user-select: none;
+}
+
+.tier-cycle-btn:hover {
+filter: brightness(1.1);
+box-shadow: none;
+}
+
+.tier-cycle-btn:active {
+transform: scale(1.3);
+box-shadow: none;
+border: none;
+filter: brightness(1.1);
+}
+
+.tier-stars-container {
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+gap: 0;
+padding-left: 0px;
+margin-top: auto;
+margin-bottom: 2px;
+}
+
+.tier-star {
+width: 11px;
+height: 11px;
+object-fit: contain;
+margin: -2.0px 0;
+transition: filter 0.2s ease;
+}
+
+.equipment-row {
+transition: opacity 0.2s ease, background-color 2s ease;
+touch-action: pan-y;
+}
+
+.equipment-row.sortable-ghost {
+opacity: 1;
+background-color: rgb(15, 23, 42);
+}
+
+.equipment-row.sortable-ghost * {
+visibility: hidden;
+}
+
+.equipment-row.sortable-chosen {
+opacity: 1;
+}
+
+.equipment-row.drag-over {
+border: 2px solid rgb(71, 85, 105);
+background-color: rgb(51, 65, 85);
+}
+
+.equipment-row.warning-downgrade {
+animation: pulseRed 2s ease-in-out infinite;
+}
+
+@keyframes pulseRed {
+0%, 100% {
+background-color: rgba(255, 0, 0, 0.05);
+}
+50% {
+background-color: rgba(255, 0, 0, 0.2);
+}
+}
+
+.drag-handle {
+cursor: grab;
+color: rgb(100, 116, 139);
+transition: color 0.2s ease;
+padding: 8px;
+margin: -8px;
+touch-action: none;
+}
+
+.drag-handle:hover {
+color: rgb(148, 163, 184);
+}
+
+.drag-handle:active {
+cursor: grabbing;
+}
+
+input[type=‘number’]::-webkit-inner-spin-button,
+input[type=‘number’]::-webkit-outer-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+
+input[type=‘number’] {
+-moz-appearance: textfield;
+}
